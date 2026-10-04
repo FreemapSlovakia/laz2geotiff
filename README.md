@@ -93,3 +93,7 @@ cargo build --release
 It builds with jemalloc and for the native CPU by default (`.cargo/config.toml`),
 so the binary will not run on an older CPU than the one it was built on. Needs
 GDAL and PROJ.
+
+## Licence
+
+GPL-3.0-or-later; see [LICENSE](LICENSE).
