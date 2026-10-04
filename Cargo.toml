@@ -1,0 +1,31 @@
+[package]
+name = "laz2geotiff"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+wbgeotiff = "0.1.2"
+# Released 0.19 does not compile against GDAL 3.13; same pin as terrain-tiles.
+gdal = { git = "https://github.com/georust/gdal", rev = "c0a6266b987a2c2d44aea9956c2cae1ed71445cf" }
+las = { version = "0.9", features = ["laz-parallel"] }
+laz = "0.12"
+proj = "0.27"
+rayon = "1"
+spade = "2.15"
+rusqlite = { version = "0.32", features = ["bundled"] }
+startin = "=0.8.2"
+walkdir = "2"
+tikv-jemallocator = { version = "0.6", optional = true }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+panic = "abort"
+
+[features]
+default = ["jemalloc"]
+# jemalloc returns freed memory to the system; glibc's per-thread arenas keep
+# it, which with dozens of threads starves the machine.
+jemalloc = ["dep:tikv-jemallocator"]
