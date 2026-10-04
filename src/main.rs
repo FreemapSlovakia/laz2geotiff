@@ -1,14 +1,11 @@
-//! laz2geotiff — build a seamless DEM GeoTIFF (tiled + VRT) from *.laz files.
+//! laz2geotiff — seamless DEMs from *.laz point clouds.
 //!
-//! Pipeline:
-//!   1. `index`  — scan a directory of *.laz files into a sqlite bbox index.
-//!   2. `render` — for each output tile, pull the laz files overlapping the
-//!      tile bbox *plus a margin* from the index, build a Delaunay TIN
-//!      (startin), and interpolate the tile pixels with Natural Neighbour
-//!      Interpolation (NNI). The margin makes adjacent tiles agree on their
-//!      shared edge, so a `gdalbuildvrt` mosaic is seamless.
-//!
-//! No reprojection is done: output CRS == source CRS (default EPSG:5514).
+//! - `index`  — scan a directory of *.laz files into a sqlite bbox index.
+//! - `xyz`    — natural neighbours straight onto the Web Mercator XYZ grid,
+//!   one Int32 GeoTIFF per block (see `xyz.rs`).
+//! - `fill`   — membrane-fill the gaps `xyz` leaves, seamlessly across blocks.
+//! - `render` — the older path: Float32 tiles in the source CRS (default
+//!   EPSG:5514) plus a VRT, the margin making adjacent tiles agree.
 
 mod fill;
 mod xyz;
